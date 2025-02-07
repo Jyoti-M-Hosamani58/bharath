@@ -1,0 +1,351 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+   <title>
+      ASAD ROADLINES
+    </title>
+    <meta
+            content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+            name="viewport"
+    />
+    <link
+            rel="icon"
+            href="{% static 'assets/img/kaiadmin/favicon.ico' %}"
+            type="image/x-icon"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Fonts and icons -->
+    <script src="{% static 'assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+        WebFont.load({
+          google: { families: ["Public Sans:300,400,500,600,700"] },
+          custom: {
+            families: [
+              "Font Awesome 5 Solid",
+              "Font Awesome 5 Regular",
+              "Font Awesome 5 Brands",
+              "simple-line-icons",
+            ],
+            urls: ["{% static 'assets/css/fonts.min.css' %}"],
+          },
+          active: function () {
+            sessionStorage.fonts = true;
+          },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}"/>
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}"/>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+</head>
+<body>
+{% include 'nav_bar.html' %}
+</div>
+<div class="page-inner">
+    <div class="row">
+        <!-- Vehicle Payment Received -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Details for Load ID: {{ details.0.loadId }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div class="card-action">
+                            <button onclick="exportToExcel()" class="btn btn-success">Export to Excel</button>
+                            <button onclick="exportToPDF()" class="btn btn-danger">Export to PDF</button>
+                        </div>
+                        <style>
+    /* Highlight the first row with a distinct style */
+    .first-row {
+        background-color: #f8f9fa; /* Light grey background */
+        font-weight: bold; /* Bold text */
+        color: #2c3e50; /* Darker text color */
+        border: 2px solid #007bff; /* Highlighted border */
+    }
+                            /* Hide table from display but keep it for export */
+#vehicleDetailsTable1 {
+    display: none; /* Or use 'visibility: hidden;' */
+}
+
+#customView .card {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+#customView .card-header {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: none;
+    padding: 10px;
+}
+
+#customView .card-body {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+#customView .row {
+    display: flex;
+    align-items: center;
+}
+
+#customView .row div {
+    margin: 5px 0;
+}
+
+</style>
+<!-- Original Table (Hidden for display but available for Excel/PDF export) -->
+<table class="table table-bordered d-none" id="vehicleDetailsTable1">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Vehicle No</th>
+            <th>Advance</th>
+            <th>Total</th>
+            <th>Balance</th>
+            <th>Paid Amt</th>
+            <th>From</th>
+            <th>To</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if details|length > 0 %}
+        <tr class="first-row">
+            <td>{{ details.0.date|date:'d-m-Y' }}</td>
+            <td>{{ details.0.vehicleNo }}</td>
+            <td>{{ details.0.advance }}</td>
+            <td>{{ details.0.total }}</td>
+            <td>{{ details.0.balance }}</td>
+            <td>{{ details.0.paidAmt }}</td>
+            <td>{{ details.0.route_from }}</td>
+            <td>{{ details.0.route_to }}</td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<!-- Custom Display for Web -->
+<div id="customView" class="container mt-4">
+    {% if details|length > 0 %}
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Vehicle Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6"><strong>Date:</strong> {{ details.0.date|date:'d-m-Y' }}</div>
+                <div class="col-md-6"><strong>Vehicle No:</strong> {{ details.0.vehicleNo }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6"><strong>Advance:</strong> {{ details.0.advance }}</div>
+                <div class="col-md-6"><strong>Total:</strong> {{ details.0.total }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6"><strong>Balance:</strong> {{ details.0.balance }}</div>
+                <div class="col-md-6"><strong>Paid Amt:</strong> {{ details.0.paidAmt }}</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6"><strong>From:</strong> {{ details.0.route_from }}</div>
+                <div class="col-md-6"><strong>To:</strong> {{ details.0.route_to }}</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+                        <table class="table table-bordered" id="vehicleDetailsTable">
+                            <thead>
+                            <thead>
+                            <tr>
+
+                                <th>Amt Date</th>
+                                <th>LTR</th>
+                                <th>LTR Rate</th>
+                                <th>Rate</th>
+                                <th>Def Amt</th>
+                                <th>Toll Amt</th>
+                                <th>Driver Amt</th>
+                                <th>Tyre Amt</th>
+                                <th>Driver Advance</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for record in details %}
+                            <tr>
+
+                                <td>{{ record.amtDate|date:'d-m-Y' }}</td>
+                                <td>{{ record.ltr }}</td>
+                                <td>{{ record.ltrRate }}</td>
+                                <td>{{ record.rate }}</td>
+                                <td>{{ record.defAmt }}</td>
+                                <td>{{ record.tollAmt }}</td>
+                                <td>{{ record.driverAmt }}</td>
+                                <td>{{ record.tyreAmt }}</td>
+                                <td>{{ record.driverAdvance }}</td>
+                                <td>
+                                    <a href="/vehiclepayment/edit/{{ record.id }}/" class="btn">Edit</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<br>
+<!-- Export buttons -->
+
+<script>
+    function exportToExcel() {
+    // Clone both tables
+    var table1 = document.getElementById("vehicleDetailsTable1").cloneNode(true);
+    var table2 = document.getElementById("vehicleDetailsTable").cloneNode(true);
+
+    // Remove the Action column from table2
+    Array.from(table2.rows).forEach(row => {
+        if (row.cells.length > 0) {
+            row.deleteCell(row.cells.length - 1); // Remove last column
+        }
+    });
+
+    // Create a workbook
+    var workbook = XLSX.utils.book_new();
+
+    // Convert table1 to worksheet and append
+    var sheet1 = XLSX.utils.table_to_sheet(table1);
+    XLSX.utils.book_append_sheet(workbook, sheet1, "Vehicle Details Table 1");
+
+    // Add an empty row to create spacing
+    const emptyRow = {};
+    XLSX.utils.sheet_add_json(sheet1, [emptyRow], { skipHeader: true, origin: -1 });
+
+    // Convert table2 to worksheet and append
+    var sheet2 = XLSX.utils.table_to_sheet(table2);
+    XLSX.utils.sheet_add_json(sheet1, XLSX.utils.sheet_to_json(sheet2), { origin: -1 });
+
+    // Save the file
+    XLSX.writeFile(workbook, "VehiclePaymentDetails.xlsx");
+}
+
+async function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+    const lineHeight = 5;
+    const margin = 10;
+
+    const pageWidth = pdf.internal.pageSize.width;
+    const pageHeight = pdf.internal.pageSize.height;
+    const maxWidth = pageWidth - margin * 2;
+
+    let y = margin;
+
+    function addTableToPDF(tableId, startY) {
+        const table = document.getElementById(tableId);
+        const rows = Array.from(table.rows);
+
+        const columnWidths = [];
+        const headerCells = rows[0].cells;
+        const numColumns = headerCells.length;
+
+        // Identify the "Action" column index
+        let actionColumnIndex = -1;
+        for (let i = 0; i < numColumns; i++) {
+            if (headerCells[i].innerText.toLowerCase().includes("action")) {
+                actionColumnIndex = i;
+                break;
+            }
+        }
+
+        for (let i = 0; i < numColumns; i++) {
+            if (i !== actionColumnIndex) {
+                columnWidths.push(maxWidth / (numColumns - (actionColumnIndex !== -1 ? 1 : 0)));
+            }
+        }
+
+        pdf.setFontSize(10); // Set font size to 10px
+
+        rows.forEach((row, rowIndex) => {
+            const cellHeight = [];
+            Array.from(row.cells).forEach((cell, colIndex) => {
+                if (colIndex === actionColumnIndex) return; // Skip the "Action" column
+
+                const cellText = cell.innerText || '';
+                const x = margin + columnWidths.slice(0, colIndex - (colIndex > actionColumnIndex ? 1 : 0)).reduce((a, b) => a + b, 0);
+                const wrappedText = pdf.splitTextToSize(cellText, columnWidths[colIndex - (colIndex > actionColumnIndex ? 1 : 0)]);
+
+                const cellHeightRequired = wrappedText.length * lineHeight;
+                cellHeight.push(cellHeightRequired);
+
+                if (startY + Math.max(...cellHeight) > pageHeight - margin) {
+                    pdf.addPage();
+                    startY = margin;
+                }
+
+                pdf.setFont(rowIndex === 0 ? "helvetica" : "helvetica", rowIndex === 0 ? "bold" : "normal");
+                wrappedText.forEach((line, lineIndex) => {
+                    pdf.text(line, x, startY + lineHeight * lineIndex);
+                });
+            });
+
+            startY += Math.max(...cellHeight);
+        });
+
+        return startY + lineHeight;
+    }
+
+    // Add first table
+    y = addTableToPDF("vehicleDetailsTable1", y);
+
+    // Add an empty row for spacing
+    y += lineHeight;
+
+    // Add second table
+    addTableToPDF("vehicleDetailsTable", y);
+
+    pdf.save("VehiclePaymentDetails.pdf");
+}
+
+
+</script>
+
+</div>
+<!--   Core JS Files   -->
+<script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+<!-- Datatables -->
+<script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+<!-- Kaiadmin JS -->
+<script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+<!-- Kaiadmin DEMO methods, don't include it in your project! -->
+<script src="{% static 'assets/js/setting-demo2.js' %}"></script>
+
+</body>
+</html>
+
+

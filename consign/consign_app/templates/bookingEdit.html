@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+ <title>
+      ASAD ROADLINES
+    </title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="{% static 'assets/img/kaiadmin/favicon.ico' %}"
+      type="image/x-icon"
+    />
+
+    <!-- Fonts and icons -->
+    <script src="{% static 'assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["{% static 'assets/css/fonts.min.css' %}"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}" />
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}" />
+  </head>
+  <body>
+      <!-- End Sidebar -->
+{% include 'nav_bar.html' %}
+          <!-- End Navbar -->
+        </div><br/> <br/> <br/> <br/>
+
+<form method="POST" enctype="multipart/form-data">
+             {% csrf_token %}
+        <div class="container">
+          <div class="page-inner">
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">Edit Booking</div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="from_location">From:</label>
+                          <input type="text" class="form-control" id="from_location" value="{{ data.from_location }}" name="from_location" required>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="to_location">To:</label>
+                          <input type="text" class="form-control" id="to_location" value="{{ data.to_location }}" name="to_location" required>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="date">Date:</label>
+<input type="date" class="form-control" id="date" value="{{ data.date|date:'Y-m-d' }}" name="date" required>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="company_name">Company Name:</label>
+                    <input type="text" class="form-control" id="company_name" value="{{ data.company_name }}" name="company_name" required>
+                        </div>
+                      </div>
+                        <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="truck_number">Truck Number:</label>
+                    <input type="text" class="form-control" id="truck_number" value="{{ data.truck_number }}" name="truck_number" required>
+                        </div>
+                      </div>
+                         <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="truck_number">Rate Fixed:</label>
+                    <input type="text" class="form-control" id="rate_fixed" value="{{ data.rate_fixed }}" name="rate_fixed" required>
+                        </div>
+                      </div>
+
+                        <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="rate_fixed">Advance:</label>
+                    <input type="text" class="form-control" id="advance" value="{{ data.advance }}" name="advance"  required>
+                        </div>
+                      </div>
+                          <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="truck_number">Paid Amount:</label>
+                    <input type="text" class="form-control" id="paidAmt" value="{{ data.paidAmt }}" name="paidAmt" required>
+                        </div>
+                      </div>
+                          <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="balance">Balance:</label>
+                    <input type="text" class="form-control" id="balance" value="{{ data.balance }}" name="balance" required>
+                        </div>
+                      </div>  <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="truck_number">Loading Slip Number:</label>
+                    <input type="text" class="form-control" id="loading_slip_number" value="{{ data.loading_slip_number }}" name="loading_slip_number" required>
+                        </div>
+                      </div>  <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="truck_number">Status:</label>
+                    <input type="text" class="form-control" id="status" value="{{ data.status }}" name="status" required>
+                        </div>
+                      </div>  <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="remark">Remark:</label>
+                    <input type="text" class="form-control" id="remark" value="{{ data.remark }}" name="remark" required>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="balance">address:</label>
+                    <input type="text" class="form-control" id="address" value="{{ data.address }}" name="address" required>
+                        </div>
+                      </div>
+                        <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="material">Material:</label>
+                    <input type="text" class="form-control" id="material" value="{{ data.material }}" name="material" required>
+                        </div>
+                      </div>
+                        <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="balance">Aprox_weight:</label>
+                    <input type="text" class="form-control" id="aprox_weight" value="{{ data.aprox_weight }}" name="aprox_weight" required>
+                        </div>
+                      </div>
+                        <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="driver_number">Driver Number:</label>
+                    <input type="text" class="form-control" id="driver_number" value="{{ data.driver_number }}" name="driver_number" required>
+                        </div>
+                      </div>
+                          <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="owner_name">Owner Name:</label>
+                    <input type="text" class="form-control" id="owner_name" value="{{ data.owner_name }}" name="owner_name" required>
+                        </div>
+                      </div>
+                          <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                          <label for="owner_number">Owner Number:</label>
+                    <input type="text" class="form-control" id="owner_number" value="{{ data.owner_number }}" name="owner_number" required>
+                        </div>
+                      </div>
+
+                      </div>
+                        <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+
+                        </div>
+                      </div>
+                        <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+
+                        </div>
+                      </div>
+
+
+
+
+                    </div>
+                  <div class="card-action">
+                    <button class="btn btn-success">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+</form>
+      <script>
+         document.addEventListener('DOMContentLoaded', function () {
+    // Explicitly call updateFinalBalance when the page loads
+    updateFinalBalance();
+});
+
+// Function to update the final balance
+function updateFinalBalance() {
+    // Get the values from dedicationAmt and balance inputs
+    var dedicationAmt = parseFloat(document.getElementById('dedicationAmt').value) || 0;
+    var balance = parseFloat(document.getElementById('balance').value) || 0;
+
+    // Calculate final balance
+    var finalBalance = balance - dedicationAmt;
+
+    // Update the final balance input
+    document.getElementById('finalBalance').value = finalBalance.toFixed(2); // Adjust decimal places if needed
+}
+
+// Add event listeners to trigger the calculation whenever values change
+document.getElementById('dedicationAmt').addEventListener('input', updateFinalBalance);
+document.getElementById('balance').addEventListener('input', updateFinalBalance);
+
+      </script>
+<script>
+    // Function to update Total and Balance fields
+function updateFields() {
+    // Get the values from inputs, ensuring we handle cases where the input is empty
+    var rate = parseFloat(document.getElementById('rate').value) || 0;
+    var tone = parseFloat(document.getElementById('tone').value) || 0;
+    var advance = parseFloat(document.getElementById('advance').value) || 0;
+    var haltAmt = parseFloat(document.getElementById('haltAmt').value) || 0;
+
+    // Calculate Total as Rate * Tone
+    var total = rate * tone;
+    document.getElementById('total').value = total.toFixed(2); // Set the total value to two decimal places
+
+    // Calculate Balance as Total - Advance + haltAmt
+    var balance = total - advance + haltAmt;
+    document.getElementById('balance').value = balance.toFixed(2); // Set the balance value to two decimal places
+    document.getElementById('finalBalance').value = balance.toFixed(2); // Set the balance value to two decimal places
+}
+
+// Add event listeners to the fields that affect Total and Balance
+document.getElementById('rate').addEventListener('input', updateFields);
+document.getElementById('tone').addEventListener('input', updateFields);
+document.getElementById('advance').addEventListener('input', updateFields);
+document.getElementById('haltAmt').addEventListener('input', updateFields);
+
+// Initial calculation in case values are already filled
+updateFields();
+
+</script>
+
+      <!-- End Custom template -->
+    </div>
+    <!--   Core JS Files   -->
+    <script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+
+    <!-- Chart JS -->
+    <script src="{% static 'assets/js/plugin/chart.js/chart.min.js' %}"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="{% static 'assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+
+    <!-- Chart Circle -->
+    <script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
+
+    <!-- Datatables -->
+    <script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="{% static 'assets/js/plugin/jsvectormap/jsvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugin/jsvectormap/world.js' %}"></script>
+
+    <!-- Google Maps Plugin -->
+    <script src="{% static 'assets/js/plugin/gmaps/gmaps.js' %}"></script>
+
+    <!-- Sweet Alert -->
+    <script src="{% static 'assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="{% static 'assets/js/setting-demo2.js' %}"></script>
+  </body>
+</html>

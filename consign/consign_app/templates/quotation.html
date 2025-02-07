@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .quotation-title {
+            text-align: center;
+            background-color: #e9f7ef;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .table-bordered th, .table-bordered td {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .footer {
+            font-size: 14px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .quotation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .quotation-details {
+            text-align: right;
+        }
+        .print-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            .print-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-4">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Asad Roadlines</h1>
+            <p>Mulla Garage 1st Floor Gabbar, Hubli, Karnataka - 580028</p>
+        </div>
+
+        <!-- Quotation Title -->
+        <div class="quotation-title">QUOTATION</div>
+
+        <!-- Recipient and Quotation Details Section -->
+        <div class="quotation-header">
+            <div>
+                <p>To,<br>
+                    {{ booking.company_name }},<br>
+                    {{ booking.address }}
+                </p>
+            </div>
+            <div class="quotation-details">
+                <p><strong>Quotation No:</strong> {{ booking.quot_id }}<br>
+                   <strong>Date:</strong> {{ booking.date }}</p>
+            </div>
+        </div>
+
+        <!-- Material Details Table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Packaging Type (Dimension)</th>
+                    <th>Actual Weight</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ booking.material }}</td>
+                    <td>{{ booking.packaging_type }}</td>
+                    <td>{{ booking.actual_weight }}</td>
+                    <td>{{ booking.quantity }}</td>
+                </tr>
+            </tbody>
+        </table>
+<p style="text-align: left; margin-top: 20px; font-size: 14px;">Requesting you to kindly confirm this quotation to move forward.</p>
+        <!-- Load Details Table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Load Type</th>
+                    <th>From - To</th>
+                    <th>Truck Details</th>
+                    <th>Weight Guarantee</th>
+                    <th>Freight Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ booking.load_type }}<br>
+                    loadinf date:{{ booking.date }}</td>
+                    <td>{{ booking.from_to }}</td>
+                    <td style="text-align: center;">
+    <img src="/media/truck.jpeg" alt="Truck Image"
+         style="width: 100px; height: auto; display: block; margin: auto;">
+                          {{ booking.truck_details }}
+</td>
+
+
+
+                    <td>{{ booking.weight_guarantee }}</td>
+                    <td>{{ booking.freight_rate }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Footer Section -->
+        <div class="footer" style="text-align: left; margin-top: 20px; font-size: 14px;">
+    <p><strong>Validity of this quotation is up to next vehicle availability.</strong></p>
+    <p>Freight Payable by: <strong>{{ booking.freight_payable_by }}</strong></p>
+    <p>Payment Terms as follow: <strong>As Per Company Terms</strong></p>
+</div>
+
+
+        <!-- Print Button (Centered) -->
+        <div class="print-button text-center">
+            <button class="btn btn-primary" onclick="window.print()">Print</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

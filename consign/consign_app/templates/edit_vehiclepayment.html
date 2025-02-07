@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+ <title>
+      ASAD ROADLINES
+    </title>
+    <meta
+            content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+            name="viewport"
+    />
+    <link
+            rel="icon"
+            href="{% static 'assets/img/kaiadmin/favicon.ico' %}"
+            type="image/x-icon"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Fonts and icons -->
+    <script src="{% static 'assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+        WebFont.load({
+          google: { families: ["Public Sans:300,400,500,600,700"] },
+          custom: {
+            families: [
+              "Font Awesome 5 Solid",
+              "Font Awesome 5 Regular",
+              "Font Awesome 5 Brands",
+              "simple-line-icons",
+            ],
+            urls: ["{% static 'assets/css/fonts.min.css' %}"],
+          },
+          active: function () {
+            sessionStorage.fonts = true;
+          },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}"/>
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}"/>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+</head>
+<body>
+{% include 'nav_bar.html' %}
+</div>
+<div class="container">
+    <div class="page-inner">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Edit Vehicle Payment Detail</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+
+                                        <label>Vehicle No:</label>
+                                        <input type="text" name="vehicleNo" class="form-control"
+                                               value="{{ record.vehicleNo }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Advance:</label>
+                                        <input type="number" name="advance" class="form-control"
+                                               value="{{ record.advance }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Total:</label>
+                                        <input type="number" name="total" class="form-control"
+                                               value="{{ record.total }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Balance:</label>
+                                        <input type="number" name="balance" class="form-control"
+                                               value="{{ record.balance }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Paid Amount:</label>
+                                        <input type="number" name="paidAmt" class="form-control"
+                                               value="{{ record.paidAmt }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Route From:</label>
+                                        <input type="text" name="route_from" class="form-control"
+                                               value="{{ record.route_from }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Route To:</label>
+                                        <input type="text" name="route_to" class="form-control"
+                                               value="{{ record.route_to }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Amt Date:</label>
+                                        <input type="date" name="amtDate" class="form-control"
+                                               value="{{ record.amtDate }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>LTR:</label>
+                                        <input type="number" name="ltr" id="ltr" class="form-control"
+                                               value="{{ record.ltr }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>LTR Rate:</label>
+                                        <input type="number" name="ltrRate" id="ltrRate" class="form-control"
+                                               value="{{ record.ltrRate }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>LTR AMount:</label>
+                                        <input type="number" name="rate" id="rate" class="form-control" value="{{ record.rate }}"><br>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Def Amount:</label>
+                                        <input type="number" name="defAmt" class="form-control"
+                                               value="{{ record.defAmt }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Toll Amount:</label>
+                                        <input type="number" name="tollAmt" class="form-control"
+                                               value="{{ record.tollAmt }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Driver Amount:</label>
+                                        <input type="number" name="driverAmt" class="form-control"
+                                               value="{{ record.driverAmt }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Tyre Amount:</label>
+                                        <input type="number" name="tyreAmt" class="form-control"
+                                               value="{{ record.tyreAmt }}"><br>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Driver Advance:</label>
+                                        <input type="number" name="driverAdvance"
+                                               value="{{ record.driverAdvance }}" class="form-control"><br>
+                                    </div>
+                                </div>
+                                <div class="card-action">
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                    <a href="{% url 'vehiclepayment_details' record.loadId %}" class="btn btn-danger">Cancel</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    // Add event listeners for input fields
+    document.getElementById('ltr').addEventListener('input', calculateLtrAmount);
+    document.getElementById('ltrRate').addEventListener('input', calculateLtrAmount);
+
+    function calculateLtrAmount() {
+        const ltr = parseFloat(document.getElementById('ltr').value) || 0;
+        const ltrRate = parseFloat(document.getElementById('ltrRate').value) || 0;
+
+        // Calculate the amount
+        const ltrAmount = ltr * ltrRate;
+
+        // Update the LTR Amount field
+        document.getElementById('rate').value = ltrAmount.toFixed(2); // Display with two decimal places
+    }
+</script>
+
+</div>
+<!--   Core JS Files   -->
+<script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+<!-- Datatables -->
+<script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+<!-- Kaiadmin JS -->
+<script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+<!-- Kaiadmin DEMO methods, don't include it in your project! -->
+<script src="{% static 'assets/js/setting-demo2.js' %}"></script>
+
+</body>
+</html>

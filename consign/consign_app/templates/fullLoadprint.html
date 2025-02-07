@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorry Receipt</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+ <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        body {
+            font-size: 20px;
+            background-color: #f8f9fa;
+            color: #212529;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            margin-top: 20px;
+            transition: all 0.3s ease-in-out;
+        }
+        .container:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        table {
+            font-size: 16px;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .table th {
+            background: #007bff;
+            color: white;
+            text-align: center;
+        }
+        .table td {
+            text-align: center;
+        }
+        .footer {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .print-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background: #007bff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: 0.3s ease-in-out;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        @media print {
+            body {
+                background-color: #fff;
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                max-width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 10px;
+                margin: 0;
+            }
+            table {
+                width: 100%;
+            }
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            .footer {
+                page-break-before: always;
+            }
+            .print-button {
+                display: none;
+            }
+            .no-print {
+                display: none;
+            }
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-4">
+        <div class="header">
+            <h4>Asad Roadlines</h4>
+            <p><b>Mulla Garage 1st Floor Gabbar</b></p>
+        </div>
+
+        <table class="table table-bordered">
+            <tr>
+                <td><strong><center>Notice:</center></strong>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Without the consignee's written permission this consignment will not be diverted,
+                    re-routed, or rebooked and it should be delivered at the destination.
+                    Lorry Receipt will be delivered only to the consignee. Without prior approval,
+                    Lorry Receipt cannot be handed over to anyone.</td>
+               <td width="180" style="text-align: center; vertical-align: middle;">
+            <b>AT OWNER'S RISK</b>
+        </td>
+                <td>
+                    <strong>LR Date:</strong>  {{ data.date|date:'d-m-Y' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong>LR No:</strong> 5
+                    <strong>Truck/Vehicle No.:</strong> {{ data.vehicleNo }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong>Transport Mode:</strong> {{ data.transport }}&nbsp;<br>
+                    <strong>From:</strong> {{ data.route_from }}&nbsp;&nbsp;&nbsp;&nbsp; <strong>To:</strong> {{ data.route_to }}<br>
+                    <strong>Payment Status:</strong>  {{ data.status }}
+                </td>
+            </tr>
+        </table>
+
+        <table class="table table-bordered">
+            <tr>
+                <td><b>Consignor:</b> {{ data.consignor_name }} <br>
+              <b>Mobile:</b> {{ data.consignor_mobile }} <br>
+                    <b>GST NO:</b>{{ data.consignor_gst }}<br>
+                    <b>Address:</b>{{ data.consignor_address }}</td>
+                <td><b>Consignee:</b>{{ data.consignee_name }}<br>
+               <b>Mobile:</b>{{ data.consignee_mobile }}<br>
+                     <b>GST NO:</b>{{ data.consignee_gst }}
+                    <br> <b>Address:</b>{{ data.consignee_address }}</td>
+
+                <td><b>Insurance details <br>is not available or not insured</b></td>
+            </tr>
+        </table>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>SI. No.</th>
+                    <th>Product / Material</th>
+                    <th>Packaging</th>
+                    <th>HSN Code</th>
+                    <th>Articles</th>
+                    <th>Actual Weight</th>
+                    <th>Charge Weight</th>
+                    <th>Freight Rate</th>
+                    <th>Freight</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>{{ data.goods }}</td>
+                   <td></td>
+                     <td>{{ data.hsn_code }}</td>
+                    <td>-</td>
+               <td>{{ data.actual_weight }}</td>
+                    <td>{{ data.charge_weight }}</td>
+                  <td>{{ data.rate }}</td>
+                    <td>To Pay</td>
+                </tr>
+                <tr>
+                    <td colspan="5"><b>WEIGHT GUARANTEE:</b> 2,100.00 MT</td>
+                    <td><b>Total:</b> 2,100.000 MT</td>
+                    <td><b>Total:</b> 2,100.000 MT</td>
+                    <td colspan="2"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    <b>Bank Details:</b><br>
+                    Bank Name: <br>
+                    Bank A/C No.: <br>
+                    IFSC:
+                </td>
+                <td><b>Total amount of goods as per the invoice</b><br>This is a computer-generated LR/Bilty.</td>
+                <td>
+                    <b>Demurrage Charges:</b><br>
+                    Applicable after: 1 hour <br>
+                    Charge: ₹ 0 Per Hour
+                </td>
+            </tr>
+        </table>
+
+        <div class="footer">
+            <p>For Asad Roadlines</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="row" style="display: flex; justify-content: space-between; align-items: center;">
+                <h1 style="text-align: left;">Terms and Conditions</h1>
+            </div>
+        </div>
+
+         <p><strong>1)</strong> The transport operator hereby agrees to hold itself liable directly to the bank concerned, as if the Bank was a party, of the contract contained with right of recourse against the Operator. The full value goods handed over for carriage, storage, and delivery, should a Bank accept this lorry Receipt as a consignee and/or in any other capacity for the purpose of providing advances and/or collection or discounting of bills of its customer, before or after the Transport Operator has been entrusted the goods.</p>
+
+            <p><strong>2)</strong> The transport operator undertakes to deliver the goods in the same order and condition as received. The lorry receipt being surrendered to the bank, its order, or its agents, which has accepted it for lending and to the collection or discounting of bills of its customers or for collection to its agents. Only the bank and the holder of the receipt entitled to the delivery as aforesaid shall have the right of recourse against the operator for any and all claims arising there.</p>
+
+            <p><strong>3)</strong> The right to entrust goods to any other lorry or service for transport of goods shall be with the Transport Operator. If the goods are entrusted by the transport operator to another entity, the other entity shall be considered the Transport Operator. Notwithstanding the delivery of goods, the operator will be responsible for the safety of the goods and for their delivery at the destination by the hands of the other carrier or its agent.</p>
+
+            <p><strong>4)</strong> The consignor is the primary payer of all transport and incidental charges, if any, payable to the Transport Operator at their agreed location.</p>
+
+            <p><strong>5)</strong> Perishable goods lying undelivered after 48 hours of arrival can be disposed of by the Transport Operator's discretion without prior notice thereof.</p>
+
+            <p><strong>6)</strong> Goods lying undelivered can be disposed of by the Transport Operator after 30 days of arrival after delivery to the consignor, bank, and the holder interested with a 15-day notice of such disposal of goods.</p>
+
+            <p><strong>7)</strong> In either of the cases mentioned above, the bank or the relevant authority shall be entitled to the proceeds and the Transport Operator is to render full accounts immediately after sale deducting freight and charges.</p>
+
+            <p><strong>8)</strong> The Consignee Bank accepting Lorry Receipt under clause 1 above will not be liable for payment of any charges arising out of any lien of the Transport Operator against the consignor or the buyer. The Transport Operator shall deliver the goods unconditionally to the Bank on Payment of the normal freight and storage charges only in connection with the consignment in question, without claiming any lien on the goods in respect of any monies due by the consignor or the consignee to the Transport Operator on any other account whatsoever.</p>
+
+            <p><strong>9)</strong> Any statement made in this lorry receipt or at any time in a circumstance regarding this receipt, the Transport Operator shall observe its obligation to the Consignee bank mentioned and will be responsible for safe and due delivery, and for any loss or damage to the goods or consignment, that arises as a result of negligence, default, failure to take reasonable precautions, maladies, or criminal or fraudulent actions of the Transport Operator or any of his Managers, Agents, Employees, Partners, Directors, Business Associates, Branches, etc.</p>
+
+            <p><strong>10)</strong> The consignor is responsible for all consequences of any incorrect or false declaration.</p>
+
+            <p><strong>11)</strong> If the goods have been lost, destroyed, damaged, or have deteriorated, the compensation payable by the Transport Operator shall not exceed the value declared.</p>
+
+            <p><strong>12)</strong> The consignment shall be detained, re-routed, or re-booked without the consignee's written and explicit permission.</p>
+
+            <p><strong>13)</strong> In case any dispute or difference arises between the parties with regard to the terms and conditions of this agreement or relating to the interpretation thereof and which could not be solved with mutual understanding, then both parties are required to approach the local jurisdiction selected by the transporter to resolve the same with legal procedure.</p>
+
+
+    <div class="print-button">
+        <button onclick="printPage()" class="btn btn-primary">Print Lorry Receipt</button>
+    </div>
+
+    <script>
+        function printPage() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

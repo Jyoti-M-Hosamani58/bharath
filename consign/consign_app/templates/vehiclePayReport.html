@@ -1,0 +1,291 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <title>
+      ASAD ROADLINES
+    </title>
+    <meta
+            content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+            name="viewport"
+    />
+    <link
+            rel="icon"
+            href="{% static 'assets/img/kaiadmin/favicon.ico' %}"
+            type="image/x-icon"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Fonts and icons -->
+    <script src="{% static 'assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+        WebFont.load({
+          google: { families: ["Public Sans:300,400,500,600,700"] },
+          custom: {
+            families: [
+              "Font Awesome 5 Solid",
+              "Font Awesome 5 Regular",
+              "Font Awesome 5 Brands",
+              "simple-line-icons",
+            ],
+            urls: ["{% static 'assets/css/fonts.min.css' %}"],
+          },
+          active: function () {
+            sessionStorage.fonts = true;
+          },
+        });
+    </script>
+<style>
+    #detailsContainer .d-flex {
+    font-size: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+</style>
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}"/>
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}"/>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+</head>
+<body>
+{% include 'nav_bar.html' %}
+<!-- End Navbar -->
+</div>
+
+<div class="container">
+    <div class="page-inner">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Vehicle Payment Detail</div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group">
+                                    <!-- Select Date -->
+                                    <label for="date">Select Date:</label>
+                                    <input type="date" class="form-control" id="date" name="date" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group">
+                                    <!-- Select Vehicle Number -->
+                                    <label for="vehicleNo">Vehicle Number:</label>
+                                    <select id="vehicleNo" class="form-control" name="vehicleNo" required>
+                                        <option value="">-- Select Vehicle --</option>
+                                        {% for vehicle in vehicles %}
+                                        <option value="{{ vehicle.vehicleNo }}">{{ vehicle.vehicleNo }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button to Fetch Data -->
+                <div class="card-action">
+                    <button id="fetchDataButton" class="btn btn-success">Fetch Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div id="detailsContainer" class="mb-4">
+    <div class="row">
+        <!-- Fields will be dynamically inserted here -->
+    </div>
+</div>
+
+    <div class="row">
+            <!-- Vehicle Payment Received -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Vehicle Payment Received</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Data</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody id="paymentTableBody">
+                                <!-- Payment records will be appended here -->
+                                </tbody>
+                            </table>
+                            <div id="grandTotalContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('fetchDataButton').addEventListener('click', fetchVehiclePayments);
+
+function fetchVehiclePayments() {
+    const date = document.getElementById('date').value;
+    const vehicleNo = document.getElementById('vehicleNo').value;
+
+    if (date && vehicleNo) {
+        fetch(`/get-vehicle-payments/?date=${date}&vehicleNo=${vehicleNo}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+// Populate data in a professional layout
+                const detailsContainer = document.getElementById('detailsContainer');
+                detailsContainer.innerHTML = ''; // Clear previous data
+
+                const commonFields = [
+                    { label: 'Date', key: 'date' },
+                    { label: 'Vehicle No', key: 'vehicleNo' },
+                    { label: 'Total', key: 'total' },
+                    { label: 'Paid Amount', key: 'paidAmt' },
+                    { label: 'From', key: 'route_from' },
+                    { label: 'To', key: 'route_to' },
+                ];
+
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'row';
+
+                commonFields.forEach((field, index) => {
+                    const colDiv = document.createElement('div');
+                    colDiv.className = 'col-md-6 mb-3'; // Two columns, each taking half the width
+                    const fieldValue = data.payments[0]?.[field.key] || 'N/A';
+
+                    colDiv.innerHTML = `
+                        <div class="d-flex">
+                            <strong class="me-2">${field.label}:</strong>
+                            <span>${fieldValue}</span>
+                        </div>
+                    `;
+
+                    rowDiv.appendChild(colDiv);
+                });
+
+                detailsContainer.appendChild(rowDiv);
+
+
+                // Populate table
+                const tableBody = document.getElementById('paymentTableBody');
+                tableBody.innerHTML = ''; // Clear previous data
+
+                const fields = [
+                    { label: 'Amount Date', key: 'amtDate', calculateTotal: false },
+                    { label: 'Liter', key: 'ltr', calculateTotal: true },
+                    { label: 'Liter Rate', key: 'ltrRate', calculateTotal: true },
+                    { label: 'LTR Amount', key: 'rate', calculateTotal: true },
+                    { label: 'DEF Amount', key: 'defAmt', calculateTotal: true },
+                    { label: 'Toll Amount', key: 'tollAmt', calculateTotal: true },
+                    { label: 'Driver Amount', key: 'driverAmt', calculateTotal: true },
+                    { label: 'Tyre Amount', key: 'tyreAmt', calculateTotal: true },
+                    { label: 'Driver Advance', key: 'driverAdvance', calculateTotal: true },
+                ];
+
+                let grandTotal = 0;
+                    let totalDriverAdvance = 0;
+                    let totalExpenses = 0;
+
+
+                // Loop through fields and add rows for each
+                    fields.forEach(field => {
+                        let row = `<tr><th>${field.label}</th>`;
+                        let fieldTotal = 0;
+
+                        data.payments.forEach(payment => {
+                            let value = payment[field.key] || 0;
+
+                            // Ensure Liter and Liter Rate are displayed properly
+                            if (field.key === 'ltr' || field.key === 'ltrRate') {
+                                value = payment[field.key] !== undefined && payment[field.key] !== null ? payment[field.key] : 0;
+                            }
+
+                            row += `<td>${value}</td>`;
+
+                            if (field.calculateTotal) {
+                                if (field.key === 'ltr' || field.key === 'ltrRate') {
+                                    // For Liter and Liter Rate, just display and add them to the totals
+                                    fieldTotal += parseFloat(value);
+                                } else {
+                                    // Exclude 'ltr' and 'ltrRate' from grandTotal and expenseTotal calculations
+                                    fieldTotal += parseFloat(value);
+                                }
+
+                                if (field.key === 'driverAdvance') {
+                                    totalDriverAdvance += parseFloat(value);
+                                } else {
+                                    totalExpenses += parseFloat(value);
+                                }
+                            }
+                        });
+
+                        // Add field total to grand total, excluding 'ltr' and 'ltrRate'
+                        if (field.calculateTotal && field.key !== 'ltr' && field.key !== 'ltrRate') {
+                            grandTotal += fieldTotal; // Add to grand total
+                        }
+
+                        row += `<td><strong>${field.calculateTotal ? fieldTotal : ''}</strong></td>`;
+                        row += '</tr>';
+                        tableBody.innerHTML += row;
+                    });
+
+                    // Calculate remaining amount (Grand total - total driver advance - total expenses)
+                    const expenseTotal = grandTotal - totalDriverAdvance; // Grand total minus driver advance
+                    const remainingAmount = totalDriverAdvance - expenseTotal;
+
+                    // Display grand total and remaining amount outside the table
+                    const grandTotalContainer = document.getElementById('grandTotalContainer');
+                    grandTotalContainer.innerHTML = `
+                        <strong>Grand Total: ${grandTotal.toFixed(2)}</strong><br>
+                        <strong>Driver Advance : ${totalDriverAdvance.toFixed(2)}</strong><br>
+                        <strong>Expense Total : ${expenseTotal.toFixed(2)}</strong><br>
+                        <strong>Remaining Amount: ${remainingAmount.toFixed(2)}</strong>
+                    `;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        } else {
+            alert('Please select both date and vehicle number.');
+        }
+    }
+
+</script>
+</div>
+<!--   Core JS Files   -->
+<script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+<!-- Datatables -->
+<script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+<!-- Kaiadmin JS -->
+<script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+<!-- Kaiadmin DEMO methods, don't include it in your project! -->
+<script src="{% static 'assets/js/setting-demo2.js' %}"></script>
+
+</body>
+</html>

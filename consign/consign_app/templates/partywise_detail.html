@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .invoice-container {
+                margin: 0;
+                width: 210mm;
+                height: auto;
+                padding: 10mm; /* Reduced padding to save space */
+                box-sizing: border-box;
+                border: none;
+                font-size: 12px; /* Reduced font size */
+                line-height: 1.2; /* Adjusted line height */
+            }
+            .table {
+                page-break-inside: avoid;
+                font-size: 12px; /* Reduced table font size */
+            }
+            .table th, .table td {
+                padding: 4px; /* Reduced padding for table cells */
+            }
+            .no-print {
+                display: none;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background-color: #f4f4f4;
+            padding-top: 20px;
+        }
+        .invoice-container {
+            border: 2px solid #000;
+            padding: 20px;
+            width: 80%;
+            max-width: 900px;
+            background-color: white;
+        }
+        .header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .details {
+            margin: 10px 0;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table, .table th, .table td {
+            border: 1px solid black;
+        }
+        .table th, .table td {
+            padding: 8px;
+            text-align: left;
+        }
+        .total {
+            margin: 10px 0;
+            text-align: right;
+            font-weight: bold;
+        }
+        .print-button {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+    <style>
+    .print-button button {
+        background-color: #ff0000; /* Bright red background */
+        color: #ffffff; /* White text */
+        border: none; /* No border */
+        padding: 10px 20px; /* Padding for better click area */
+        font-size: 16px; /* Font size for readability */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor for hover */
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+    }
+
+    .print-button button:hover {
+        background-color: #cc0000; /* Slightly darker red on hover */
+        transform: scale(1.05); /* Slight zoom on hover */
+    }
+
+    .print-button button:active {
+        background-color: #a00000; /* Even darker red when active */
+        transform: scale(0.95); /* Slightly smaller when clicked */
+    }
+</style>
+
+</head>
+<body>
+
+    <div class="invoice-container">
+        <p style="text-align: center;">
+        <b>GSTIN: </b>29AIIPN4047Q1ZH &nbsp; | &nbsp;
+        <b>Tax Invoice / Freight Bill</b> &nbsp; | &nbsp;
+        <b>Cell:</b> 7899424366 / 7676786761
+    </p>
+        <div class="header">
+            ASAD ROADLINES<br>
+            Siddheshwar Nagar, Unkal Cross, Hubli<br>
+            Email: abdulnadaf00@gmail.com<br>
+            Cell: 7899424366 / 7676786761
+        </div>
+        <table class="table">
+            <tr>
+                <td class="text-left customer-info">
+                    <p><span class="font-weight-bold"><b>To:</b> </span>{{ consignments.0.receiver_name }}, {{ consignments.0.receiver_address }}</p>
+                    <p><span class="font-weight-bold"><b>Party GST  No:</b> </span>{{ consignments.0.receiver_GST }}</p>
+                    <p><span class="font-weight-bold"><b>Date:</b> </span> {{ consignments.0.date }}</p>
+                </td>
+                <td class="text-right">
+                    <p><strong>Bill Number:</strong>{{ invoice_number }}</p>
+                    <p><strong>Date:</strong> <span id="current-date"></span></p>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table">
+            <tr>
+                <th>G.R. No</th>
+                <th>Date</th>
+                <th>Particulars</th>
+                <th>No. of Articles</th>
+                <th>KM</th>
+                <th>Rate</th>
+                <th>Amount Rs.</th>
+            </tr>
+            {% for consignment in consignments %}
+            <tr>
+                <td>{{ consignment.track_id }}</td>
+                <td>{{ consignment.track_id }}</td>
+                <td><b>From:</b> {{ consignment.sender_name }},{{ consignment.sender_address }},{{ consignment.route_from }}<br>
+                <b>To :</b>{{ consignment.receiver_name }},{{ consignment.receiver_address }},{{ consignment.route_to }}<br>
+                Vec</td>
+                <td>{{ consignment.pieces }}</td>
+                <td></td>
+                <td></td>
+                <td>{{ consignment.total_cost }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th colspan="6" style="text-align:right">Total</th>
+                <td>{{ consignments.0.total_cost }}</td>
+            </tr>
+            <tr>
+                <th colspan="6" style="text-align:right">CGST @ 2.5%:</th>
+                <td>-</td>
+            </tr>
+            <tr>
+                <th colspan="6" style="text-align:right">SGST @ 2.5%:</th>
+                <td>-</td>
+            </tr>
+            <tr>
+                <th colspan="6" style="text-align:right">Grand Total:</th>
+               <td>{{ consignments.0.total_cost }}</td>
+            </tr>
+        </table>
+        <tr>
+            <td><p class="total" style="text-align:center"><b>Amount in Words:</b <span id="amount-in-words"></span></p></td>
+        </tr>
+
+        <p><b>Bank Details:State Bank of India</b></p>
+        <p><b>A/C No: </b>41086166438</p>
+        <p><b>IFC Code: </b>SBIN0015318</p>
+        <p><b>Branch: </b>Akshay Colony</p>
+        <p style="text-align: center;">Subject to Hubli Jurisdiction Only</p>
+        <p style="text-align: right;">For ASAD ROADLINES</p>
+         <div class="print-button no-print">
+        <button onclick="window.print()">Print Invoice</button>
+    </div>
+    </div>
+
+    <script>
+        // Function to convert numbers to words
+        function numberToWords(num) {
+            const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+            const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+            const g = ['', 'Thousand', 'Million', 'Billion', 'Trillion', 'Quadrillion', 'Quintillion', 'Sextillion', 'Septillion', 'Octillion', 'Nonillion'];
+
+            if (typeof num === 'string') num = parseInt(num, 10);
+            if (num === 0) return 'Zero';
+
+            let words = [];
+            let chunks = [];
+            let chunkCount = 0;
+
+            while (num > 0) {
+                chunks.push(num % 1000);
+                num = Math.floor(num / 1000);
+                chunkCount++;
+            }
+
+            for (let i = 0; i < chunkCount; i++) {
+                let chunk = chunks[i];
+                if (chunk === 0) continue;
+                let chunkStr = '';
+                let hundreds = Math.floor(chunk / 100);
+                let tens = chunk % 100;
+                if (hundreds > 0) {
+                    chunkStr += a[hundreds] + ' Hundred ';
+                    if (tens > 0) chunkStr += 'and ';
+                }
+                if (tens < 20) {
+                    chunkStr += a[tens];
+                } else {
+                    chunkStr += b[Math.floor(tens / 10)];
+                    if (tens % 10 > 0) chunkStr += '-' + a[tens % 10];
+                }
+                words.push(chunkStr + ' ' + g[i]);
+            }
+
+            return words.reverse().join(' ').trim();
+        }
+
+        // When the DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the grand total from your consignments data (make sure the value is passed correctly)
+            const grandTotal = parseFloat("{{ consignments.0.total_cost }}");  // Convert the value to float
+            const grandTotalInWords = numberToWords(grandTotal);  // Convert grand total to words
+            document.getElementById("amount-in-words").innerText = grandTotalInWords;  // Display in the HTML
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the current date
+            const currentDate = new Date();
+            // Format the date as MM/DD/YYYY (you can change the format if needed)
+            const formattedDate = currentDate.toLocaleDateString('en-GB'); // Adjust locale if needed
+            // Set the current date into the 'current-date' span
+            document.getElementById("current-date").innerText = formattedDate;
+        });
+    </script>
+</body>
+</html>

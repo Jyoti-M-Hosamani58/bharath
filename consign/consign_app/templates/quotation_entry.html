@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>ASAD TRANSPORT</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="{% static 'assets/img/kaiadmin/favicon.ico' %}"
+      type="image/x-icon"
+    />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Fonts and icons -->
+    <script src="{% static 'assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["{% static 'assets/css/fonts.min.css' %}"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}" />
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}" />
+    <!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<!-- jsPDF AutoTable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+  </head>
+  <body>
+  {% include 'nav_bar.html' %}
+          <!-- End Navbar -->
+        </div>
+
+    <div class="container mt-5">
+      <div class="card">
+        <div class="card-header"><br>
+          <h3>Quotation </h3>
+        </div>
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="company_name">Company Name:</label>
+                  <input type="text" class="form-control" id="company_name" name="company_name" required />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="address">Address :</label>
+                  <input type="text" class="form-control" id="address" name="address" required />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="date">Date:</label>
+                  <input type="date" class="form-control" id="date" name="date" required />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="email">Email:</label>
+                  <input type="text" class="form-control" id="email" name="email" required />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="material">Material:</label>
+                  <input type="text" class="form-control" id="material" name="material" required />
+                </div>
+              </div>
+               <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="packaging_type">Packaging Type:</label>
+                  <input type="text" class="form-control" id="packaging_type" name="packaging_type" required />
+                </div>
+              </div>
+               <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="actual_weight">Actual. Weight:</label>
+                  <input type="text" class="form-control" id="actual_weight" name="actual_weight" required />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="quantity">Quantity:</label>
+                  <input type="text" class="form-control" id="quantity" name="quantity" required />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="load_type">Load Type:</label>
+                  <input type="text" class="form-control" id="load_type" name="load_type" required />
+                </div>
+              </div>
+               <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="from_to">From - To:</label>
+                  <input type="text" class="form-control" id="from_to" name="from_to" required />
+                </div>
+              </div>
+               <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="truck_details">Truck Details:</label>
+                  <input type="text" class="form-control" id="truck_details" name="truck_details" required />
+                </div>
+              </div>
+                <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="weight_guarantee">Weight Quaantee:</label>
+                  <input type="text" class="form-control" id="weight_guarantee" name="weight_guarantee" required />
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="freight_rate">Freight Rate:</label>
+                  <input type="text" class="form-control" id="freight_rate" name="freight_rate" required />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="freight_payable_by">Freight payable By:</label>
+                  <input type="text" class="form-control" id="freight_payable_by" name="freight_payable_by" required/>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="card-footer">
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
+    <script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+    <script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+  </body>
+</html>

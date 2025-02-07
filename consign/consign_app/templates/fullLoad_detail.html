@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>
+      ASAD ROADLINES
+    </title>
+    <style>
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .invoice-container {
+                margin: 0;
+                width: 210mm;
+                height: auto;
+                padding: 10mm;
+                box-sizing: border-box;
+                border: none;
+                font-size: 12px;
+                line-height: 1.2;
+            }
+            .table {
+                page-break-inside: avoid;
+                font-size: 12px;
+            }
+            .table th, .table td {
+                padding: 4px;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background-color: #f4f4f4;
+            padding-top: 20px;
+        }
+        .invoice-container {
+            border: 2px solid #000;
+            padding: 20px;
+            width: 80%;
+            max-width: 900px;
+            background-color: white;
+        }
+        .header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .details {
+            margin: 10px 0;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table, .table th, .table td {
+            border: 1px solid black;
+        }
+        .table th, .table td {
+            padding: 8px;
+            text-align: left;
+        }
+        .total {
+            margin: 10px 0;
+            text-align: right;
+            font-weight: bold;
+        }
+        .print-button {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+    <style>
+    .print-button button {
+        background-color: #ff0000; /* Bright red background */
+        color: #ffffff; /* White text */
+        border: none; /* No border */
+        padding: 10px 20px; /* Padding for better click area */
+        font-size: 16px; /* Font size for readability */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor for hover */
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+    }
+
+    .print-button button:hover {
+        background-color: #cc0000; /* Slightly darker red on hover */
+        transform: scale(1.05); /* Slight zoom on hover */
+    }
+
+    .print-button button:active {
+        background-color: #a00000; /* Even darker red when active */
+        transform: scale(0.95); /* Slightly smaller when clicked */
+    }
+</style>
+
+</head>
+<body>
+
+    <div class="invoice-container">
+        <p style="text-align: center;">
+            <b>GSTIN:</b> 29AIIPN4047Q1ZH &nbsp; | &nbsp;
+            <b>Tax Invoice / Freight Bill</b> &nbsp; | &nbsp;
+            <b>Call:</b>  7899424366 /7676786761
+        </p>
+        <div class="header">
+            ASAD ROADLINES<br>
+            Siddheshwar Nagar, Unkal Cross, Hubli<br>
+            Email: abdulnadaf00@gmail.com<br>
+            Cell: 7899424366 / 7676786761
+        </div>
+        <table class="table">
+            <tr>
+                <td>
+                    <p><b>To:</b> {{ data.companyname }}, {{ data.address }}</p>
+                    <p><b>Transporter GST:</b> {{ data.gst }}</p>
+                    <p><b>Date:</b> {{ fullloads.0.date }}</p>
+                </td>
+                <td style="text-align: right;">
+                    <p><strong>Bill Number:</strong> {{ invoice_number }}</p>
+                    <p><strong>Date:</strong> <span id="current-date"></span></p>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table">
+            <tr>
+                <th>G.R. No</th>
+                <th>Date</th>
+                <th>Particulars</th>
+                <th>No. of Articles</th>
+                <th>KM</th>
+                <th>Rate</th>
+                <th>Amount Rs.</th>
+            </tr>
+            {% for fullload in fullloads %}
+            <tr>
+                <td>{{ fullload.track_id }}</td>
+                <td>{{ fullload.date }}</td>
+                <td><b>From:</b> {{ fullload.route_from }}<br>
+                    <b>To:</b> {{ fullload.route_to }}<br>
+                </td>
+                <td>{{ fullload.pieces }}</td>
+                <td>{{ fullload.km }}</td>
+                <td>{{ fullload.rate }}</td>
+                <td>{{ fullload.total }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th colspan="6" style="text-align:right">Paid Amt</th>
+                <td>{{ fullloads.0.paidAmt }}</td>
+            </tr>
+             <tr>
+                <th colspan="6" style="text-align:right">Final Balance</th>
+                <td>{{ fullloads.0.finalBalance }}</td>
+            </tr>
+
+
+        </table>
+        <p class="finalBalance" style="text-align:center"><b>Amount in Words: </b><span id="amount-in-words"></span></p>
+
+        <p><b>Bank Details: State Bank of India</b></p>
+        <p><b>A/C No:</b> 41086166438</p>
+        <p><b>IFSC Code:</b> SBIN0015318</p>
+        <p><b>Branch:</b> Akshay Colony</p>
+        <p style="text-align: center;">Subject to Hubli Jurisdiction Only</p>
+        <p style="text-align: right;">For ASAD ROADLINES</p>
+         <div class="print-button no-print">
+        <button onclick="window.print()">Print Invoice</button>
+    </div>
+    </div>
+
+    <script>
+        // Function to convert numbers to words
+        function numberToWords(num) {
+            const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+            const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+            if (num === 0) return 'Zero';
+            let words = '';
+            if (num >= 1000) {
+                words += a[Math.floor(num / 1000)] + ' Thousand ';
+                num %= 1000;
+            }
+            if (num >= 100) {
+                words += a[Math.floor(num / 100)] + ' Hundred ';
+                num %= 100;
+            }
+            if (num >= 20) {
+                words += b[Math.floor(num / 10)] + ' ';
+                num %= 10;
+            }
+            words += a[num];
+            return words.trim();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const grandTotal = parseFloat("{{ fullloads.0.finalBalance|default:0 }}");
+            document.getElementById("amount-in-words").innerText = numberToWords(grandTotal);
+
+            const currentDate = new Date().toLocaleDateString('en-GB');
+            document.getElementById("current-date").innerText = currentDate;
+        });
+    </script>
+</body>
+</html>

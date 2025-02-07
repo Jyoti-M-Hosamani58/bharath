@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+ <title>
+      ASAD ROADLINES
+    </title>
+    <meta
+            content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+            name="viewport"
+    />
+    <link
+            rel="icon"
+            href="{% static 'assets/img/kaiadmin/favicon.ico' %}"
+            type="image/x-icon"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Fonts and icons -->
+    <script src="{% static 'assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+        WebFont.load({
+          google: { families: ["Public Sans:300,400,500,600,700"] },
+          custom: {
+            families: [
+              "Font Awesome 5 Solid",
+              "Font Awesome 5 Regular",
+              "Font Awesome 5 Brands",
+              "simple-line-icons",
+            ],
+            urls: ["{% static 'assets/css/fonts.min.css' %}"],
+          },
+          active: function () {
+            sessionStorage.fonts = true;
+          },
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}"/>
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}"/>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+</head>
+<body>
+{% include 'nav_bar.html' %}
+<!-- End Navbar -->
+</div>
+
+<div class="container">
+    <div class="page-inner">
+    <!-- Filter Form -->
+    <form method="GET" action="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Vehicle Payment Detail</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group">
+        <label for="from_date">From Date:</label>
+        <input type="date" id="from_date" class="form-control" name="from_date" value="{{ request.GET.from_date }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group">
+        <label for="to_date">To Date:</label>
+        <input type="date" id="to_date" class="form-control" name="to_date" value="{{ request.GET.to_date }}">
+                                </div>
+                            </div>
+                       <div class="col-md-6 col-lg-4">
+                                <div class="form-group">
+        <label for="vehicleNo">Vehicle No:</label>
+        <input type="text" id="vehicleNo" class="form-control" name="vehicleNo" value="{{ request.GET.vehicleNo }}">
+                                </div>
+                       </div>
+<div class="card-action">
+        <button type="submit" class="btn btn-success">Search</button>
+</div>
+        <a href="{% url 'vehiclepayment_summary' %}">Clear</a> <!-- Reset filter -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+     <div class="row">
+    <!-- Vehicle Payment Received -->
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Vehicle Payment Received</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+            <tr>
+                <th>Load ID</th>
+                <th>Date</th>
+                <th>Vehicle No</th>
+                <th>Advance</th>
+                <th>Total</th>
+                <th>Balance</th>
+                <th>Paid Amount</th>
+                <th>Route From</th>
+                <th>Route To</th>
+                <th>Total LTR</th>
+                <th>Total LTR Rate</th>
+                <th>Total Rate</th>
+                <th>Total Def Amount</th>
+                <th>Total Toll Amount</th>
+                <th>Total Driver Amount</th>
+                <th>Total Tyre Amount</th>
+                <th>Total Driver Advance</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in summary_data %}
+            <tr>
+                <td>{{ row.loadId }}</td>
+                <td>{{ row.date }}</td>
+                <td>{{ row.vehicleNo }}</td>
+                <td>{{ row.advance }}</td>
+                <td>{{ row.total }}</td>
+                <td>{{ row.balance }}</td>
+                <td>{{ row.paidAmt }}</td>
+                <td>{{ row.route_from }}</td>
+                <td>{{ row.route_to }}</td>
+                <td>{{ row.total_ltr }}</td>
+                <td>{{ row.total_ltrRate }}</td>
+                <td>{{ row.total_rate }}</td>
+                <td>{{ row.total_defAmt }}</td>
+                <td>{{ row.total_tollAmt }}</td>
+                <td>{{ row.total_driverAmt }}</td>
+                <td>{{ row.total_tyreAmt }}</td>
+                <td>{{ row.total_driverAdvance }}</td>
+                <td>
+<a href="/vehiclepayment/details/{{ row.loadId }}/
+?from_date={{ request.GET.from_date|default:'' }}
+&to_date={{ request.GET.to_date|default:'' }}
+&vehicleNo={{ request.GET.vehicleNo|default:'' }}"
+class="btn">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+     </div>
+</div>
+</div>
+</div>
+    <!--   Core JS Files   -->
+    <script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+    <!-- Datatables -->
+    <script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+    <!-- Kaiadmin JS -->
+    <script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="{% static 'assets/js/setting-demo2.js' %}"></script>
+
+  </body>
+</html>
+

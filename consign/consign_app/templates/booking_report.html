@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asad Roadlines Loading Slip</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #fdfdfd;
+            color: #333;
+        }
+
+        .container {
+            border: 2px solid #e74c3c;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff8f8;
+        }
+
+        .header {
+            text-align: center;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            margin-top: 20px;
+            font-size: 1.1em;
+            line-height: 1.6em;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+            text-align: center;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                font-size: 12px; /* Adjust to fit content */
+            }
+
+            @page {
+                size: A4;
+                margin: 20mm; /* Standard A4 margin */
+            }
+
+            .btn-print,
+            .btn-download,
+            .btn-back {
+                display: none; /* Hide buttons during printing */
+            }
+
+            .container {
+                border: none; /* Remove border for printing */
+            }
+
+            .header {
+                font-size: 1.2em; /* Ensure header remains readable */
+            }
+
+            .content {
+                font-size: 1em;
+                line-height: 1.4em;
+            }
+
+            .footer {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <p style="text-align: right;"><b>Cell:</b> 7899424366<br>7676786761</p>
+            <h1>ASAD ROADLINES</h1>
+            <p><strong style="color: purple;">Lorry Suppliers & Commission Agents</strong></p>
+            <p><strong style="color: purple;">Mulla Garage, 1st Floor Opp. Nandi Parking, Gabbur Hubli-580028</strong></p>
+            <p>Email: <a href="mailto:abdulnadaf00@gmail.com">abdulnadaf00@gmail.com</a></p>
+             <h1 style="text-align: center;"><b></b>&nbsp;&nbsp;&nbsp;
+               LOADING SLIP</h1>
+        </div>
+
+        <div class="content">
+             <h1 style="text-align: right; "><strong>{{ booking.loading_slip_number }}</strong></h1>
+            <p style="text-align: right;">Date: <strong>{{ booking.date|date:"d/m/y" }}</strong></p>
+            <p>To: <strong>{{ booking.company_name }}</strong></p>
+            <p>Dear Sir/Madam,</p>
+            <p>As per your telephonic conversation, we are sending you our <b>Truck No:</b> {{ booking.truck_number }} &nbsp;&nbsp;<b>From:</b> {{ booking.from_location }} &nbsp;&nbsp;<b>To:</b> {{ booking.to_location }} &nbsp; as per rate fixed {{ booking.rate_fixed }} per ton.</p>
+            <p>Kindly arrange the consignment for the above truck and hand over the necessary documents such as challans and waybills etc.</p>
+            <p>
+                <b>Hire Fixed:</b> {{ booking.rate_fixed }}<br>
+                <b>Advance:</b> {{ booking.advance }}<br>
+                <b>Balance:</b> {{ booking.balance }}
+            </p>
+            <p style="text-align: right;">Your's faithfully,<br><strong>Asad Roadlines</strong></p>
+        </div>
+        <hr>
+        <div class="footer">
+            <p><strong style="color: Black;">Note: &nbsp;Please note all particulars from the registration book of the truck and the driver’s license.</strong></p>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn btn-primary btn-print" onclick="window.print()">Print</button>
+            <button class="btn btn-primary btn-download" onclick="downloadPDF()">Download PDF</button>
+            <a href="{% url 'booking_list' %}" class="btn btn-back" style="background-color: salmon; color: white;">Back</a>
+        </div>
+    </div>
+
+    <script>
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'pt', 'a4');
+
+            const container = document.querySelector('.container');
+            await html2canvas(container, {
+                scale: 2,
+            }).then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = pdf.internal.pageSize.getWidth();
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.save('invoice.pdf');
+            }).catch((error) => {
+                console.error('Error generating PDF:', error);
+            });
+        }
+    </script>
+<script>
+    async function downloadPDF() {
+        const { jsPDF } = window.jspdf; // Ensure jsPDF is loaded
+        const pdf = new jsPDF('p', 'pt', 'a4'); // Create a new jsPDF instance
+
+        const container = document.querySelector('.container'); // Select the container
+        await html2canvas(container, { scale: 2 }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png'); // Convert content to image
+            const imgWidth = pdf.internal.pageSize.getWidth();
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight); // Add image to PDF
+            pdf.save('Booking.pdf'); // Save the PDF
+        }).catch((error) => {
+            console.error('Error generating PDF:', error);
+        });
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+</body>
+</html>
